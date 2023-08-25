@@ -1,9 +1,10 @@
 -comentario: se realizo el backup de las siguientes tablas: casacentral,clientes,compras,empleados,factura,licencia,log_compras,log_ventas,materiaprima,movimientos_financieros
 pedido,pedidos_proveedores,producto,proveedor,reservas,sistema,sucursales,ventas.
-
+CREATE DATABASE  IF NOT EXISTS `lacomilona2` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `lacomilona2`;
 -- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
 --
--- Host: localhost    Database: backuplacomilona
+-- Host: localhost    Database: lacomilona2
 -- ------------------------------------------------------
 -- Server version	8.0.33
 
@@ -19,6 +20,27 @@ pedido,pedidos_proveedores,producto,proveedor,reservas,sistema,sucursales,ventas
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `casacentral`
+--
+
+DROP TABLE IF EXISTS `casacentral`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `casacentral` (
+  `id_casacentral` int NOT NULL AUTO_INCREMENT,
+  `nombre_casacentral` varchar(50) NOT NULL,
+  `direccion` varchar(60) DEFAULT NULL,
+  `telefono` varchar(20) DEFAULT NULL,
+  `gerente_general` varchar(50) DEFAULT NULL,
+  `id_empleado` int NOT NULL,
+  PRIMARY KEY (`id_casacentral`),
+  UNIQUE KEY `id_casacentral` (`id_casacentral`),
+  KEY `id_empleado` (`id_empleado`),
+  CONSTRAINT `casacentral_ibfk_1` FOREIGN KEY (`id_empleado`) REFERENCES `empleados` (`id_empleado`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `casacentral`
 --
 
@@ -29,6 +51,24 @@ INSERT INTO `casacentral` VALUES (1,'Sucursal Central','Calle Principal 123','55
 UNLOCK TABLES;
 
 --
+-- Table structure for table `clientes`
+--
+
+DROP TABLE IF EXISTS `clientes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `clientes` (
+  `id_cliente` int NOT NULL AUTO_INCREMENT,
+  `nombre_cliente` varchar(50) NOT NULL,
+  `telefono_cliente` varchar(50) DEFAULT NULL,
+  `direccion_cliente` varchar(60) DEFAULT NULL,
+  `mail` varchar(80) DEFAULT NULL,
+  PRIMARY KEY (`id_cliente`),
+  UNIQUE KEY `id_cliente` (`id_cliente`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `clientes`
 --
 
@@ -37,6 +77,24 @@ LOCK TABLES `clientes` WRITE;
 INSERT INTO `clientes` VALUES (1,'Juan Pérez','555-1234','Calle Principal 123','juan.perez@example.com'),(2,'María Gómez','444-5678','Avenida Norte 456','maria.gomez@example.com'),(3,'Pedro López','333-9087','Calle Sur 789','pedro.lopez@example.com'),(4,'Ana Ramírez','222-6754','Avenida Este 321','ana.ramirez@example.com'),(5,'Carlos Castro','666-4321','Calle Oeste 654','carlos.castro@example.com'),(6,'Laura Hernández','777-9876','Avenida 1 987','laura.hernandez@example.com'),(7,'Luis Martínez','888-2345','Calle 2 234','luis.martinez@example.com'),(8,'Andrea Sánchez','999-7654','Avenida 3 567','andrea.sanchez@example.com'),(9,'José Rodríguez','333-1111','Calle Tranquila 234','jose.rodriguez@example.com'),(10,'Diana Romero','222-9999','Avenida del Bosque 789','diana.romero@example.com'),(11,'Fernando López','555-4321','Calle del Mar 876','fernando.lopez@example.com'),(12,'Sofía Martínez','444-9999','Avenida del Sol 345','sofia.martinez@example.com'),(13,'Lucas Fernández','333-2222','Calle del Bosque 234','lucas.fernandez@example.com'),(14,'Carolina Ramírez','222-5555','Avenida del Mar 789','carolina.ramirez@example.com'),(15,'Gabriel Gómez','555-8888','Calle del Sol 543','gabriel.gomez@example.com');
 /*!40000 ALTER TABLE `clientes` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `compras`
+--
+
+DROP TABLE IF EXISTS `compras`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `compras` (
+  `id_compra` int NOT NULL AUTO_INCREMENT,
+  `id_pedido` int NOT NULL,
+  `precio` decimal(10,0) DEFAULT NULL,
+  PRIMARY KEY (`id_compra`),
+  UNIQUE KEY `id_compra` (`id_compra`),
+  KEY `id_pedido` (`id_pedido`),
+  CONSTRAINT `compras_ibfk_1` FOREIGN KEY (`id_pedido`) REFERENCES `pedido` (`id_pedido`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `compras`
@@ -67,6 +125,51 @@ DELIMITER ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
+-- Temporary view structure for view `datos_clientes`
+--
+
+DROP TABLE IF EXISTS `datos_clientes`;
+/*!50001 DROP VIEW IF EXISTS `datos_clientes`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `datos_clientes` AS SELECT 
+ 1 AS `id_cliente`,
+ 1 AS `nombre_cliente`,
+ 1 AS `direccion_cliente`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary view structure for view `emision_facturas`
+--
+
+DROP TABLE IF EXISTS `emision_facturas`;
+/*!50001 DROP VIEW IF EXISTS `emision_facturas`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `emision_facturas` AS SELECT 
+ 1 AS `id_sucursal`,
+ 1 AS `monto`,
+ 1 AS `forma_pago`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `empleados`
+--
+
+DROP TABLE IF EXISTS `empleados`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `empleados` (
+  `id_empleado` int NOT NULL AUTO_INCREMENT,
+  `nombre_empleado` varchar(50) DEFAULT NULL,
+  `telefono_empleado` varchar(50) DEFAULT NULL,
+  `direccion_empleado` varchar(60) DEFAULT NULL,
+  PRIMARY KEY (`id_empleado`),
+  UNIQUE KEY `id_empleado` (`id_empleado`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `empleados`
 --
 
@@ -75,6 +178,29 @@ LOCK TABLES `empleados` WRITE;
 INSERT INTO `empleados` VALUES (1,'Juan Pérez','555-1234','Calle 123, Ciudad ABC'),(2,'María Gómez','444-5678','Avenida XYZ, Pueblo 123'),(3,'Pedro López','333-9087','Calle Principal, Ciudad XYZ'),(4,'Ana Ramírez','222-6754','Avenida Central, Villa 456'),(5,'Carlos Castro','666-4321','Calle Secundaria, Ciudad EFG'),(6,'Laura Hernández','777-9876','Avenida del Sol, Pueblo 789'),(7,'Luis Martínez','888-2345','Calle del Río, Ciudad XYZ'),(8,'Andrea Sánchez','999-7654','Avenida del Mar, Villa 654'),(9,'José Rodríguez','333-1111','Calle Tranquila, Ciudad ABC'),(10,'Diana Romero','222-9999','Avenida del Bosque, Pueblo 654');
 /*!40000 ALTER TABLE `empleados` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `factura`
+--
+
+DROP TABLE IF EXISTS `factura`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `factura` (
+  `id_factura` int NOT NULL AUTO_INCREMENT,
+  `id_sucursal` int NOT NULL,
+  `id_producto` int NOT NULL,
+  `monto` decimal(10,0) DEFAULT NULL,
+  `forma_pago` varchar(30) DEFAULT NULL,
+  `fecha_hora` datetime DEFAULT NULL,
+  PRIMARY KEY (`id_factura`),
+  UNIQUE KEY `id_factura` (`id_factura`),
+  KEY `id_sucursal` (`id_sucursal`),
+  KEY `id_producto` (`id_producto`),
+  CONSTRAINT `factura_ibfk_1` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursales` (`id_sucursal`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `factura_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `factura`
@@ -87,6 +213,65 @@ INSERT INTO `factura` VALUES (1,1,1,500,'Tarjeta de crédito','2023-08-01 10:00:
 UNLOCK TABLES;
 
 --
+-- Temporary view structure for view `info_pedidos`
+--
+
+DROP TABLE IF EXISTS `info_pedidos`;
+/*!50001 DROP VIEW IF EXISTS `info_pedidos`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `info_pedidos` AS SELECT 
+ 1 AS `id_pedido`,
+ 1 AS `telefono_cliente`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary view structure for view `info_reservas`
+--
+
+DROP TABLE IF EXISTS `info_reservas`;
+/*!50001 DROP VIEW IF EXISTS `info_reservas`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `info_reservas` AS SELECT 
+ 1 AS `id_reserva`,
+ 1 AS `id_sucursal`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary view structure for view `ingresos_egresos`
+--
+
+DROP TABLE IF EXISTS `ingresos_egresos`;
+/*!50001 DROP VIEW IF EXISTS `ingresos_egresos`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `ingresos_egresos` AS SELECT 
+ 1 AS `id_cuenta_corrientes`,
+ 1 AS `id_venta`,
+ 1 AS `id_compra`,
+ 1 AS `monto_total`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `licencia`
+--
+
+DROP TABLE IF EXISTS `licencia`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `licencia` (
+  `id_licencia` int NOT NULL AUTO_INCREMENT,
+  `id_empleado` int NOT NULL,
+  `total_dias` int DEFAULT NULL,
+  PRIMARY KEY (`id_licencia`),
+  UNIQUE KEY `id_licencia` (`id_licencia`),
+  KEY `id_empleado` (`id_empleado`),
+  CONSTRAINT `licencia_ibfk_1` FOREIGN KEY (`id_empleado`) REFERENCES `empleados` (`id_empleado`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `licencia`
 --
 
@@ -95,6 +280,23 @@ LOCK TABLES `licencia` WRITE;
 INSERT INTO `licencia` VALUES (1,1,10),(2,2,15),(3,3,7),(4,4,12),(5,5,8);
 /*!40000 ALTER TABLE `licencia` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `log_compras`
+--
+
+DROP TABLE IF EXISTS `log_compras`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `log_compras` (
+  `id_log` int NOT NULL AUTO_INCREMENT,
+  `usuario` varchar(50) NOT NULL,
+  `fecha` date NOT NULL,
+  `hora` time NOT NULL,
+  `accion` varchar(100) NOT NULL,
+  PRIMARY KEY (`id_log`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `log_compras`
@@ -106,6 +308,23 @@ LOCK TABLES `log_compras` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `log_ventas`
+--
+
+DROP TABLE IF EXISTS `log_ventas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `log_ventas` (
+  `id_log` int NOT NULL AUTO_INCREMENT,
+  `usuario` varchar(50) NOT NULL,
+  `fecha` date NOT NULL,
+  `hora` time NOT NULL,
+  `accion` varchar(100) NOT NULL,
+  PRIMARY KEY (`id_log`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `log_ventas`
 --
 
@@ -113,6 +332,22 @@ LOCK TABLES `log_ventas` WRITE;
 /*!40000 ALTER TABLE `log_ventas` DISABLE KEYS */;
 /*!40000 ALTER TABLE `log_ventas` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `materiaprima`
+--
+
+DROP TABLE IF EXISTS `materiaprima`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `materiaprima` (
+  `id_materiaprima` int NOT NULL AUTO_INCREMENT,
+  `id_sucursal` int NOT NULL,
+  `cantidad` decimal(10,0) DEFAULT NULL,
+  PRIMARY KEY (`id_materiaprima`),
+  UNIQUE KEY `id_materiaprima` (`id_materiaprima`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `materiaprima`
@@ -125,6 +360,30 @@ INSERT INTO `materiaprima` VALUES (1,1,100),(2,1,50),(3,2,75),(4,2,120),(5,3,200
 UNLOCK TABLES;
 
 --
+-- Table structure for table `movimientos_financieros`
+--
+
+DROP TABLE IF EXISTS `movimientos_financieros`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `movimientos_financieros` (
+  `id_cuenta_corrientes` int NOT NULL AUTO_INCREMENT,
+  `id_venta` int NOT NULL,
+  `id_compra` int NOT NULL,
+  `id_sucursal` int NOT NULL,
+  `monto_total` decimal(10,2) DEFAULT NULL,
+  PRIMARY KEY (`id_cuenta_corrientes`),
+  UNIQUE KEY `id_cuenta_corrientes` (`id_cuenta_corrientes`),
+  KEY `id_venta` (`id_venta`),
+  KEY `id_compra` (`id_compra`),
+  KEY `id_sucursal` (`id_sucursal`),
+  CONSTRAINT `movimientos_financieros_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `ventas` (`id_venta`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `movimientos_financieros_ibfk_2` FOREIGN KEY (`id_compra`) REFERENCES `compras` (`id_compra`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `movimientos_financieros_ibfk_3` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursales` (`id_sucursal`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `movimientos_financieros`
 --
 
@@ -133,6 +392,26 @@ LOCK TABLES `movimientos_financieros` WRITE;
 INSERT INTO `movimientos_financieros` VALUES (31,1,1,1,100.00),(32,2,2,2,250.00),(33,3,3,3,180.00),(34,4,4,1,120.00),(35,5,5,2,300.00),(36,6,6,3,120.00),(37,7,7,1,220.00),(38,8,8,2,180.00),(39,9,9,3,160.00),(40,10,10,1,200.00);
 /*!40000 ALTER TABLE `movimientos_financieros` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `pedido`
+--
+
+DROP TABLE IF EXISTS `pedido`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `pedido` (
+  `id_pedido` int NOT NULL AUTO_INCREMENT,
+  `id_producto` int NOT NULL,
+  `nombre_cliente` varchar(50) NOT NULL,
+  `telefono_cliente` varchar(50) DEFAULT NULL,
+  `direccion_cliente` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id_pedido`),
+  UNIQUE KEY `id_pedido` (`id_pedido`),
+  KEY `id_producto` (`id_producto`),
+  CONSTRAINT `pedido_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `pedido`
@@ -145,6 +424,27 @@ INSERT INTO `pedido` VALUES (1,1,'Juan Pérez','555-1234','Calle Principal 123')
 UNLOCK TABLES;
 
 --
+-- Table structure for table `pedidos_proveedores`
+--
+
+DROP TABLE IF EXISTS `pedidos_proveedores`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `pedidos_proveedores` (
+  `id_pedido` int NOT NULL AUTO_INCREMENT,
+  `id_proveedor` int NOT NULL,
+  `id_materiaprima` int NOT NULL,
+  `cantidad` decimal(10,2) DEFAULT NULL,
+  PRIMARY KEY (`id_pedido`),
+  UNIQUE KEY `id_pedido` (`id_pedido`),
+  KEY `id_proveedor` (`id_proveedor`),
+  KEY `id_materiaprima` (`id_materiaprima`),
+  CONSTRAINT `pedidos_proveedores_ibfk_1` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedor` (`id_proveedor`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `pedidos_proveedores_ibfk_2` FOREIGN KEY (`id_materiaprima`) REFERENCES `materiaprima` (`id_materiaprima`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `pedidos_proveedores`
 --
 
@@ -153,6 +453,22 @@ LOCK TABLES `pedidos_proveedores` WRITE;
 INSERT INTO `pedidos_proveedores` VALUES (1,1,1,5.00),(2,2,2,3.00),(3,3,3,8.00),(4,4,4,10.00),(5,5,5,2.00),(6,6,6,6.00),(7,7,7,4.00),(8,8,8,7.00),(9,9,9,9.00),(10,10,10,1.00);
 /*!40000 ALTER TABLE `pedidos_proveedores` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `producto`
+--
+
+DROP TABLE IF EXISTS `producto`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `producto` (
+  `id_producto` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) NOT NULL,
+  `precio` decimal(10,0) DEFAULT NULL,
+  PRIMARY KEY (`id_producto`),
+  UNIQUE KEY `id_producto` (`id_producto`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `producto`
@@ -165,6 +481,24 @@ INSERT INTO `producto` VALUES (1,'Producto1',100),(2,'Producto2',50),(3,'Product
 UNLOCK TABLES;
 
 --
+-- Table structure for table `proveedor`
+--
+
+DROP TABLE IF EXISTS `proveedor`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `proveedor` (
+  `id_proveedor` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) NOT NULL,
+  `rubro` varchar(50) DEFAULT NULL,
+  `telefono` varchar(50) DEFAULT NULL,
+  `cuit` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id_proveedor`),
+  UNIQUE KEY `id_proveedor` (`id_proveedor`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `proveedor`
 --
 
@@ -173,6 +507,27 @@ LOCK TABLES `proveedor` WRITE;
 INSERT INTO `proveedor` VALUES (1,'Proveedor1','Electrónica','555-1234','12-34567890-1'),(2,'Proveedor2','Textiles','444-5678','23-45678901-2'),(3,'SuministrosTech','Tecnología','333-9087','34-56789012-3'),(4,'MegaModa','Moda','222-6754','45-67890123-4'),(5,'ToolsRUs','Herramientas','666-4321','56-78901234-5'),(6,'EcoSoluciones','Medio ambiente','777-9876','67-89012345-6'),(7,'AgroInsumos','Agricultura','888-2345','78-90123456-7'),(8,'PapeleríaSuprema','Papelería','999-7654','89-01234567-8'),(9,'FerreteríaTotal','Ferretería','333-1111','90-12345678-9'),(10,'DistribucionesMundo','Distribución','222-9999','98-76543210-0');
 /*!40000 ALTER TABLE `proveedor` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `reservas`
+--
+
+DROP TABLE IF EXISTS `reservas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `reservas` (
+  `id_reserva` int NOT NULL AUTO_INCREMENT,
+  `id_sucursal` int NOT NULL,
+  `id_cliente` int NOT NULL,
+  `telefono` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id_reserva`),
+  UNIQUE KEY `id_reserva` (`id_reserva`),
+  KEY `id_sucursal` (`id_sucursal`),
+  KEY `id_cliente` (`id_cliente`),
+  CONSTRAINT `reservas_ibfk_1` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursales` (`id_sucursal`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `reservas_ibfk_2` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `reservas`
@@ -185,6 +540,22 @@ INSERT INTO `reservas` VALUES (1,1,1,'555-1234'),(2,1,2,'444-5678'),(3,2,3,'333-
 UNLOCK TABLES;
 
 --
+-- Table structure for table `sistema`
+--
+
+DROP TABLE IF EXISTS `sistema`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sistema` (
+  `id_permiso` int NOT NULL AUTO_INCREMENT,
+  `usuario` varchar(50) NOT NULL,
+  `contraseña` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id_permiso`),
+  UNIQUE KEY `id_permiso` (`id_permiso`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `sistema`
 --
 
@@ -195,6 +566,23 @@ INSERT INTO `sistema` VALUES (1,'usuario1','pass1234'),(2,'admin_2023','admin_pa
 UNLOCK TABLES;
 
 --
+-- Table structure for table `sucursales`
+--
+
+DROP TABLE IF EXISTS `sucursales`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sucursales` (
+  `id_sucursal` int NOT NULL AUTO_INCREMENT,
+  `nombre_sucursal` varchar(50) NOT NULL,
+  `telefono_sucursal` varchar(50) DEFAULT NULL,
+  `direccion_sucursal` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id_sucursal`),
+  UNIQUE KEY `id_sucursal` (`id_sucursal`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `sucursales`
 --
 
@@ -203,6 +591,28 @@ LOCK TABLES `sucursales` WRITE;
 INSERT INTO `sucursales` VALUES (1,'Sucursal Central','555-1234','Calle Principal 123'),(2,'Sucursal Norte','444-5678','Avenida Norte 456'),(3,'Sucursal Sur','333-9087','Calle Sur 789'),(4,'Sucursal Este','222-6754','Avenida Este 321'),(5,'Sucursal Oeste','666-4321','Calle Oeste 654'),(6,'Sucursal 1','777-9876','Avenida 1 987'),(7,'Sucursal 2','888-2345','Calle 2 234'),(8,'Sucursal 3','999-7654','Avenida 3 567');
 /*!40000 ALTER TABLE `sucursales` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `ventas`
+--
+
+DROP TABLE IF EXISTS `ventas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ventas` (
+  `id_venta` int NOT NULL AUTO_INCREMENT,
+  `id_sucursal` int NOT NULL,
+  `id_factura` int NOT NULL,
+  `monto` decimal(10,0) DEFAULT NULL,
+  `fecha_hora` datetime DEFAULT NULL,
+  PRIMARY KEY (`id_venta`),
+  UNIQUE KEY `id_venta` (`id_venta`),
+  KEY `id_sucursal` (`id_sucursal`),
+  KEY `id_factura` (`id_factura`),
+  CONSTRAINT `ventas_ibfk_1` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursales` (`id_sucursal`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `ventas_ibfk_2` FOREIGN KEY (`id_factura`) REFERENCES `factura` (`id_factura`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `ventas`
@@ -233,11 +643,11 @@ DELIMITER ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
--- Dumping events for database 'backuplacomilona'
+-- Dumping events for database 'lacomilona2'
 --
 
 --
--- Dumping routines for database 'backuplacomilona'
+-- Dumping routines for database 'lacomilona2'
 --
 /*!50003 DROP FUNCTION IF EXISTS `calcular_total_compras` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -462,6 +872,96 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
+-- Final view structure for view `datos_clientes`
+--
+
+/*!50001 DROP VIEW IF EXISTS `datos_clientes`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `datos_clientes` AS select `clientes`.`id_cliente` AS `id_cliente`,`clientes`.`nombre_cliente` AS `nombre_cliente`,`clientes`.`direccion_cliente` AS `direccion_cliente` from `clientes` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `emision_facturas`
+--
+
+/*!50001 DROP VIEW IF EXISTS `emision_facturas`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `emision_facturas` AS select `factura`.`id_sucursal` AS `id_sucursal`,`factura`.`monto` AS `monto`,`factura`.`forma_pago` AS `forma_pago` from `factura` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `info_pedidos`
+--
+
+/*!50001 DROP VIEW IF EXISTS `info_pedidos`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `info_pedidos` AS select `pedido`.`id_pedido` AS `id_pedido`,`pedido`.`telefono_cliente` AS `telefono_cliente` from `pedido` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `info_reservas`
+--
+
+/*!50001 DROP VIEW IF EXISTS `info_reservas`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `info_reservas` AS select `reservas`.`id_reserva` AS `id_reserva`,`reservas`.`id_sucursal` AS `id_sucursal` from `reservas` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `ingresos_egresos`
+--
+
+/*!50001 DROP VIEW IF EXISTS `ingresos_egresos`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `ingresos_egresos` AS select `movimientos_financieros`.`id_cuenta_corrientes` AS `id_cuenta_corrientes`,`movimientos_financieros`.`id_venta` AS `id_venta`,`movimientos_financieros`.`id_compra` AS `id_compra`,`movimientos_financieros`.`monto_total` AS `monto_total` from `movimientos_financieros` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -472,4 +972,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-08-24 21:14:11
+-- Dump completed on 2023-08-24 16:48:08
